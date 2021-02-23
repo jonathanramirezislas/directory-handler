@@ -1,22 +1,19 @@
-import React,{useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, Text, View} from 'react-native';
 import {connection} from './../shared/shared';
 import globalStyles from '../styles/globalstyle';
-import { List, Headline, Button} from 'react-native-paper';
+import { List, Headline, Button, FAB } from 'react-native-paper';
 import axios from 'axios';
-
-
-
 
 export const Inicio = ({navigation}) => {
   const [clientes, setClientes] = useState([]);
-  const [ consultarAPI, setConsultarAPI ] = useState(true);
+  const [consultarAPI, setConsultarAPI] = useState(true);
 
   useEffect(() => {
     const obtenerClientesApi = async () => {
       try {
         const resultado = await axios.get(connection);
-        console.log('resultados',resultado)
+        console.log('resultados', resultado);
         setClientes(resultado.data);
         setConsultarAPI(false);
       } catch (error) {
@@ -31,10 +28,15 @@ export const Inicio = ({navigation}) => {
 
   return (
     <View>
-        <Button icon="plus-circle" onPress={() => navigation.navigate("NuevoCliente", { setConsultarAPI}) }>
-                Nuevo Cliente
-        </Button>
-      <Headline style={globalStyles.titulo}> { clientes.length > 0 ? "Clientes" : "Aún no hay Clientes" } </Headline>
+      <Button
+        icon="plus-circle"
+        onPress={() => navigation.navigate('NuevoCliente', {setConsultarAPI})}>
+        Nuevo Cliente
+      </Button>
+      <Headline style={globalStyles.titulo}>
+        {' '}
+        {clientes.length > 0 ? 'Clientes' : 'Aún no hay Clientes'}{' '}
+      </Headline>
 
       <FlatList
         data={clientes}
@@ -46,11 +48,19 @@ export const Inicio = ({navigation}) => {
             onPress={() =>
               navigation.navigate('DetallesCliente', {
                 item,
-                guardarConsultarAPI,
+                setConsultarAPI,
               })
             }
           />
         )}
+      />
+
+      <FAB
+        icon="plus"
+        style={globalStyles.fab}
+        onPress={() =>
+          navigation.navigate('NuevoCliente', {guardarConsultarAPI})
+        }
       />
     </View>
   );
