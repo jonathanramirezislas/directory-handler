@@ -27,7 +27,7 @@ export const Inicio = ({navigation}) => {
   }, [consultarAPI]);
 
   return (
-    <View>
+    <View style={globalStyles.contenedor}>
       <Button
         icon="plus-circle"
         onPress={() => navigation.navigate('NuevoCliente', {setConsultarAPI})}>
@@ -59,7 +59,7 @@ export const Inicio = ({navigation}) => {
         icon="plus"
         style={globalStyles.fab}
         onPress={() =>
-          navigation.navigate('NuevoCliente', {guardarConsultarAPI})
+          navigation.navigate('NuevoCliente', {setConsultarAPI})
         }
       />
     </View>

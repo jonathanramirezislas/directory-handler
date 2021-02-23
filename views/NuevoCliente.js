@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   TextInput,
@@ -14,7 +14,7 @@ import globalStyles from '../styles/globalstyle';
 import { connection } from '../shared/shared';
 
 
-export const NuevoCliente = ({navigation, setConsultarAPI}) => {
+export const NuevoCliente = ({navigation,route, setConsultarAPI}) => {
   // campos formulario
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
@@ -22,6 +22,16 @@ export const NuevoCliente = ({navigation, setConsultarAPI}) => {
   const [empresa, setEmpresa] = useState('');
   const [alerta, setAlerta] = useState(false);
 
+// detectar si estamos editando o no
+useEffect(() => {
+  if (route.params.cliente) {
+    const {nombre, telefono, correo, empresa} = route.params.cliente;
+    setNombre(nombre);
+    setTelefono(telefono);
+    setCorreo(correo);
+    setEmpresa(empresa);
+  }
+}, []);
 
   // almacena el cliente en la BD
   const guardarCliente = async () => {
@@ -30,15 +40,31 @@ export const NuevoCliente = ({navigation, setConsultarAPI}) => {
       setAlerta(true);
       return;
     }
-    // generar el cliente
-    const cliente = {nombre, telefono, empresa, correo};
 
+
+ // Si estamos editando o creando un nuevo cliente
+ if(route.params.cliente) {
+
+  const { id } = route.params.cliente;
+  cliente.id = id;
+  const url = connection+`/${id}`;
+
+  // generar el cliente
+  const cliente = {nombre, telefono, empresa, correo};
+
+  try {
+      await axios.put(url, cliente);
+  } catch (error) {
+      console.log(error);
+  }
+
+} else {
       try {
         await axios.post(connection, cliente);
       } catch (error) {
           console.log(error);
       }
-
+    }
 // redireccionar
 navigation.navigate('Inicio');
 
