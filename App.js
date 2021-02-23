@@ -25,11 +25,10 @@ const theme = {
 const App = () => {
   return (
     <>
-    <PaperProvider>
-      
+    <PaperProvider> 
        <NavigationContainer>
               <Stack.Navigator
-                initialRouteName="NuevoCliente"//testing
+                initialRouteName="Inicio"
                 screenOptions={{
                   headerStyle: {
                     backgroundColor: theme.colors.primary

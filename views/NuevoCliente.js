@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
@@ -10,13 +11,17 @@ import {
 } from 'react-native-paper';
 import globalStyles from '../styles/globalstyle';
 
-export const NuevoCliente = () => {
+import { connection } from '../shared/shared';
+
+
+export const NuevoCliente = ({navigation, setConsultarAPI}) => {
   // campos formulario
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
   const [correo, setCorreo] = useState('');
   const [empresa, setEmpresa] = useState('');
   const [alerta, setAlerta] = useState(false);
+
 
   // almacena el cliente en la BD
   const guardarCliente = async () => {
@@ -25,16 +30,26 @@ export const NuevoCliente = () => {
       setAlerta(true);
       return;
     }
-
     // generar el cliente
     const cliente = {nombre, telefono, empresa, correo};
-    console.log(cliente);
+
+      try {
+        await axios.post(connection, cliente);
+      } catch (error) {
+          console.log(error);
+      }
+
+// redireccionar
+navigation.navigate('Inicio');
 
     // limpiar el form (opcional)
     setNombre('');
     setTelefono('');
     setCorreo('');
     setEmpresa('');
+
+    // cambiar a true para traernos el nuevo cliente
+    setConsultarAPI(true);
   };
 
   return (
