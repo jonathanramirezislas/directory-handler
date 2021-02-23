@@ -14,12 +14,14 @@ import globalStyles from '../styles/globalstyle';
 import { connection } from '../shared/shared';
 
 
-export const NuevoCliente = ({navigation,route, setConsultarAPI}) => {
+export const NuevoCliente = ({navigation,route}) => {
+  const { setConsultarAPI} = route.params;
+
   // campos formulario
-  const [nombre, setNombre] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [empresa, setEmpresa] = useState('');
+  const [nombre, setNombre] = useState('alex');
+  const [telefono, setTelefono] = useState('445455');
+  const [correo, setCorreo] = useState('alexs@gmail.com');
+  const [empresa, setEmpresa] = useState('duals');
   const [alerta, setAlerta] = useState(false);
 
 // detectar si estamos editando o no
@@ -42,15 +44,15 @@ useEffect(() => {
     }
 
 
+  // generar el cliente
+  const cliente = {nombre, telefono, empresa, correo};
+
  // Si estamos editando o creando un nuevo cliente
  if(route.params.cliente) {
 
   const { id } = route.params.cliente;
   cliente.id = id;
   const url = connection+`/${id}`;
-
-  // generar el cliente
-  const cliente = {nombre, telefono, empresa, correo};
 
   try {
       await axios.put(url, cliente);
@@ -59,6 +61,7 @@ useEffect(() => {
   }
 
 } else {
+
       try {
         await axios.post(connection, cliente);
       } catch (error) {
@@ -89,6 +92,7 @@ navigation.navigate('Inicio');
         style={styles.input}
       />
       <TextInput
+        keyboardType = 'numeric'
         label="Client's phone"
         placeholder="13131414"
         onChangeText={(texto) => setTelefono(texto)}
